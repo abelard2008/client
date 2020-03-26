@@ -46,7 +46,9 @@ protocol wot {
     WotStatusType status;
     SigID vouchProof; // ID of the voucher's sigchain link where they did the vouching.
     UserVersion vouchee;
+    string voucheeUsername;
     UserVersion voucher;
+    string voucherUsername;
     array<string> vouchTexts;
     Time vouchedAt;
     union { null, Confidence } confidence;
@@ -55,5 +57,5 @@ protocol wot {
   // dismiss notifications for a user vouch
   void dismissWotNotifications(int sessionID, string voucher, string vouchee);
 
-  array<WotVouch> wotListCLI(int sessionID, string vouchee, string voucher);
+  array<WotVouch> wotFetchVouches(int sessionID, string vouchee, string voucher);
 }

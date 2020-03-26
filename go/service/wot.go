@@ -85,7 +85,7 @@ func (h *WebOfTrustHandler) WotVouchCLI(ctx context.Context, arg keybase1.WotVou
 	}))
 }
 
-func (h *WebOfTrustHandler) WotListCLI(ctx context.Context, arg keybase1.WotListCLIArg) (res []keybase1.WotVouch, err error) {
+func (h *WebOfTrustHandler) WotFetchVouches(ctx context.Context, arg keybase1.WotFetchVouchesArg) (res []keybase1.WotVouch, err error) {
 	ctx = libkb.WithLogTag(ctx, "WOT")
 	mctx := libkb.NewMetaContext(ctx, h.G())
 	return libkb.FetchWotVouches(mctx, libkb.FetchWotVouchesArg{Vouchee: arg.Vouchee, Voucher: arg.Voucher})

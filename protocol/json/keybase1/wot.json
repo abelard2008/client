@@ -98,8 +98,16 @@
           "name": "vouchee"
         },
         {
+          "type": "string",
+          "name": "voucheeUsername"
+        },
+        {
           "type": "UserVersion",
           "name": "voucher"
+        },
+        {
+          "type": "string",
+          "name": "voucherUsername"
         },
         {
           "type": {
@@ -226,7 +234,7 @@
       ],
       "response": null
     },
-    "wotListCLI": {
+    "wotFetchVouches": {
       "request": [
         {
           "name": "sessionID",
