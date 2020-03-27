@@ -1007,6 +1007,7 @@ export type TypedActionsMap = {
   'tracker2:changeFollow': tracker2.ChangeFollowPayload
   'tracker2:ignore': tracker2.IgnorePayload
   'tracker2:updateFollows': tracker2.UpdateFollowsPayload
+  'tracker2:updateWotEntries': tracker2.UpdateWotEntriesPayload
   'tracker2:getProofSuggestions': tracker2.GetProofSuggestionsPayload
   'tracker2:proofSuggestionsUpdated': tracker2.ProofSuggestionsUpdatedPayload
   'tracker2:showUser': tracker2.ShowUserPayload

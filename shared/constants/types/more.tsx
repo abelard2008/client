@@ -62,3 +62,5 @@ const isPlatformsExpandedType = (str: string): str is PlatformsExpandedType =>
   PlatformsExpanded.includes(str as any)
 export const asPlatformsExpandedType = (str: string): PlatformsExpandedType | null =>
   isPlatformsExpandedType(str) ? str : null
+
+export type WebOfTrustVerificationType = 'none' | 'audio' | 'video' | 'email' | 'other_chat' | 'in_person'

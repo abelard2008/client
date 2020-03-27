@@ -49,7 +49,7 @@ const connected = Container.namedConnect(
     if (!notAUser) {
       // Keybase user
       const followThem = Constants.followThem(state, username)
-      const {followersCount, followingCount, followers, following, reason} = d
+      const {followersCount, followingCount, followers, following, reason, webOfTrustEntries} = d
 
       return {
         ...commonProps,
@@ -65,6 +65,7 @@ const connected = Container.namedConnect(
         sbsAvatarUrl: undefined,
         serviceIcon: undefined,
         title: username,
+        webOfTrustEntries,
       }
     } else {
       // SBS profile. But `nonUserDetails` might not have arrived yet,
@@ -86,6 +87,7 @@ const connected = Container.namedConnect(
         service,
         serviceIcon: Styles.isDarkMode() ? nonUserDetails.siteIconFullDarkmode : nonUserDetails.siteIconFull,
         title,
+        webOfTrustEntries: [],
       }
     }
   },
@@ -161,8 +163,7 @@ const connected = Container.namedConnect(
       title: stateProps.title,
       userIsYou: stateProps.userIsYou,
       username: stateProps.username,
-      // Integrate webOfTrust here.
-      webOfTrustEntries: [],
+      webOfTrustEntries: stateProps.webOfTrustEntries ? [...stateProps.webOfTrustEntries] : [],
     }
   },
   'Profile2'

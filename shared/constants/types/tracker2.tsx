@@ -1,3 +1,7 @@
+import {WebOfTrustVerificationType} from './more'
+import * as RPCTypes from './rpc-gen'
+import * as ProfileTypes from './profile'
+
 export type TeamShowcase = {
   description: string
   isOpen: boolean
@@ -63,6 +67,7 @@ export type Details = {
   teamShowcase?: Array<TeamShowcase>
   username: string
   resetBrokeTrack: boolean
+  webOfTrustEntries?: Array<WebOfTrustEntry>
 }
 
 // Details for SBS profiles
@@ -84,6 +89,10 @@ export type NonUserDetails = {
 
 export type WebOfTrustEntry = {
   attestingUser: string
+  attestation: string
+  vouchedAt: number
+  status: RPCTypes.WotStatusType
+  verificationType: WebOfTrustVerificationType
 }
 
 export type State = {

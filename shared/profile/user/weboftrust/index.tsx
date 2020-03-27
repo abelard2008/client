@@ -1,17 +1,19 @@
 import * as React from 'react'
-import * as Types from '../../../constants/types/profile'
+import {WebOfTrustVerificationType} from '../../../constants/types/more'
+import {WotStatusType} from '../../../constants/types/rpc-gen'
 import * as Kb from '../../../common-adapters'
 import * as Styles from '../../../styles'
+import {formatTimeRelativeToNow} from '../../../util/timestamp'
 
 type Props = {
   attestation: string
   attestingUser: string
-  dateString: string
+  vouchedAt: number
   onAccept?: () => void
   onHide?: () => void
   onReject?: () => void
-  pending: boolean
-  verificationType: Types.WebOfTrustVerificationType
+  status: WotStatusType
+  verificationType: WebOfTrustVerificationType
 }
 
 const WebOfTrust = (props: Props) => (
@@ -45,7 +47,7 @@ const WebOfTrust = (props: Props) => (
               colorFollowing={true}
               style={styles.username}
             />
-            <Kb.Text type="BodySmall">{props.dateString}</Kb.Text>
+            <Kb.Text type="BodySmall">{formatTimeRelativeToNow(props.vouchedAt)}</Kb.Text>
           </Kb.Box2>
         </Kb.Box2>
       </Kb.Box2>
