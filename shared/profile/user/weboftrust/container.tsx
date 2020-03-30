@@ -1,45 +1,70 @@
 import * as Container from '../../../util/container'
-import {WebOfTrustVerificationType} from '../../../constants/types/more'
-import {WotStatusType, WotReactionType} from '../../../constants/types/rpc-gen'
+import * as UsersGen from '../../../actions/users-gen'
 import WebOfTrust from '.'
+import {WebOfTrustVerificationType} from '../../../constants/types/more'
+import {wotReactWaitingKey} from '../../../constants/users'
+import {WotReactionType, WotStatusType} from '../../../constants/types/rpc-gen'
 
 type OwnProps = {
   webOfTrustAttestation: {
     attestation: string
     attestingUser: string
-    vouchedAt: string
     status: WotStatusType
     verificationType: WebOfTrustVerificationType
+    vouchedAt: number
   }
+  username: string
 }
 
 const Connected = Container.connect(
   (state, ownProps: OwnProps) => {
-    const {attestation, attestingUser, vouchedAt, status, verificationType} = ownProps.webOfTrustAttestation
+    const {username, webOfTrustAttestation} = ownProps
+    const {attestation, attestingUser, vouchedAt, status, verificationType} = webOfTrustAttestation
+    const userIsYou = ownProps.username === state.config.username
     return {
       attestation,
       attestingUser,
-      vouchedAt,
       status,
-      username: state.config.username,
+      userIsYou,
+      username,
       verificationType,
+      vouchedAt,
     }
   },
-  () => ({
-    _onAccept: () => {},
-    _onHide: () => {},
-    _onReject: () => {},
-  }),
+
+  (dispatch: Container.TypedDispatch, {webOfTrustAttestation}: OwnProps) => {
+    const {status, attestingUser} = webOfTrustAttestation
+    switch (status) {
+      case WotStatusType.proposed: {
+        return {
+          _onAccept: () =>
+            dispatch(UsersGen.createWotReact({reaction: WotReactionType.accept, voucher: attestingUser})),
+          _onReject: () =>
+            dispatch(UsersGen.createWotReact({reaction: WotReactionType.reject, voucher: attestingUser})),
+        }
+      }
+      case WotStatusType.accepted: {
+        return {
+          _onReject: () =>
+            dispatch(UsersGen.createWotReact({reaction: WotReactionType.reject, voucher: attestingUser})),
+        }
+      }
+      default: {
+        return null
+      }
+    }
+  },
   (stateProps, dispatchProps) => ({
     attestation: stateProps.attestation,
     attestingUser: stateProps.attestingUser,
-    vouchedAt: stateProps.vouchedAt,
+    onAccept: dispatchProps?._onAccept,
+    onReject: dispatchProps?._onReject,
+    reactWaitingKey: wotReactWaitingKey,
     status: stateProps.status,
-    // Send these callback down based on what type of attestation it is.
-    onAccept: dispatchProps._onAccept,
-    onHide: dispatchProps._onHide,
-    onReject: dispatchProps._onReject,
+    userIsYou: stateProps.userIsYou,
+    username: stateProps.username,
     verificationType: stateProps.verificationType,
+    vouchedAt: stateProps.vouchedAt,
   })
 )(WebOfTrust)
 

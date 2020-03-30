@@ -1,11 +1,11 @@
 import * as Constants from '../../constants/tracker2'
 import * as Container from '../../util/container'
+import Profile2, {BackgroundColorType} from '.'
 import * as ProfileGen from '../../actions/profile-gen'
 import * as RouteTreeGen from '../../actions/route-tree-gen'
+import * as Styles from '../../styles'
 import * as Tracker2Gen from '../../actions/tracker2-gen'
 import * as Types from '../../constants/types/tracker2'
-import Profile2, {BackgroundColorType} from '.'
-import * as Styles from '../../styles'
 
 export type OwnProps = Container.RouteProps<{username: string}>
 
@@ -93,6 +93,7 @@ const connected = Container.namedConnect(
   },
   dispatch => ({
     _onEditAvatar: () => dispatch(ProfileGen.createEditAvatar()),
+    _onIKnowThem: () => {}, // TODO: route to the new attestation flow
     _onReload: (username: string, isYou: boolean, state: Types.DetailsState) => {
       if (state !== 'valid') {
         // Might be a Keybase user or not, launch non-user profile fetch.
@@ -150,7 +151,7 @@ const connected = Container.namedConnect(
       onAddIdentity,
       onBack: dispatchProps.onBack,
       onEditAvatar: stateProps.userIsYou ? dispatchProps._onEditAvatar : undefined,
-      onIKnowThem: () => {},
+      onIKnowThem: stateProps.userIsYou ? undefined : dispatchProps._onIKnowThem,
       onReload: () => dispatchProps._onReload(stateProps.username, stateProps.userIsYou, stateProps.state),
       reason: stateProps.reason,
       sbsAvatarUrl: stateProps.sbsAvatarUrl,

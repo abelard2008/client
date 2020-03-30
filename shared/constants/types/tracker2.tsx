@@ -1,6 +1,5 @@
 import {WebOfTrustVerificationType} from './more'
 import * as RPCTypes from './rpc-gen'
-import * as ProfileTypes from './profile'
 
 export type TeamShowcase = {
   description: string
@@ -90,9 +89,9 @@ export type NonUserDetails = {
 export type WebOfTrustEntry = {
   attestingUser: string
   attestation: string
-  vouchedAt: number
   status: RPCTypes.WotStatusType
   verificationType: WebOfTrustVerificationType
+  vouchedAt: number
 }
 
 export type State = {

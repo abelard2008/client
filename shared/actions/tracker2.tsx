@@ -132,11 +132,14 @@ function* load(state: Container.TypedState, action: Tracker2Gen.LoadPayload) {
   }
 }
 
-const loadWebOfTrustEntries = async (action: Tracker2Gen.LoadPayload) => {
-  const {assertion} = action.payload
+const loadWebOfTrustEntries = async (
+  action: Tracker2Gen.LoadPayload | EngineGen.Keybase1NotifyUsersWebOfTrustChangedPayload
+) => {
+  const username =
+    action.type === Tracker2Gen.load ? action.payload.assertion : action.payload.params.username
   try {
     const wotVouches = await RPCTypes.wotWotFetchVouchesRpcPromise(
-      {vouchee: assertion, voucher: ''},
+      {vouchee: username, voucher: ''},
       Constants.profileLoadWaitingKey
     )
     const webOfTrustEntries =
@@ -149,7 +152,7 @@ const loadWebOfTrustEntries = async (action: Tracker2Gen.LoadPayload) => {
       })) || []
     return Tracker2Gen.createUpdateWotEntries({
       entries: webOfTrustEntries,
-      voucheeUsername: assertion,
+      voucheeUsername: username,
     })
   } catch (err) {
     logger.error(`Error loading web-of-trust info: ${err.message}`)
@@ -318,6 +321,7 @@ function* tracker2Saga() {
   yield* Saga.chainAction(Tracker2Gen.load, loadFollowers)
   yield* Saga.chainAction(Tracker2Gen.load, loadFollowing)
   yield* Saga.chainAction(Tracker2Gen.load, loadWebOfTrustEntries)
+  yield* Saga.chainAction(EngineGen.keybase1NotifyUsersWebOfTrustChanged, loadWebOfTrustEntries)
   yield* Saga.chainAction2(Tracker2Gen.getProofSuggestions, getProofSuggestions)
   yield* Saga.chainAction2(EngineGen.keybase1NotifyTrackingTrackingChanged, refreshChanged)
   yield* Saga.chainAction(EngineGen.keybase1Identify3UiIdentify3Result, identify3Result)
