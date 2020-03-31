@@ -3,11 +3,13 @@ import * as Constants from '../../../../../constants/teams'
 import * as Container from '../../../../../util/container'
 import {TeamInviteRow} from '.'
 import {InviteInfo, TeamID} from '../../../../../constants/types/teams'
+import {Contact} from '../../../../invite-by-contact'
 
 type OwnProps = {
   id: string
   teamID: TeamID
   firstItem: boolean
+  contacts: Contact[] | null
 }
 
 // TODO: when removing flags.teamsRedesign, move this into the component itself
@@ -55,8 +57,11 @@ export default Container.connect(
     }
     // TODO: can we just do this by invite ID always?
 
+    // First, maybe we have both a name and a phone/email
     let label = user.username || user.name || user.email || user.phone
     let subLabel = user.name ? user.phone || user.email : undefined
+
+    // Or maybe it's all in the invite name
     const re = /(.+) \((.+)\)/
     if (!subLabel && re.test(label)) {
       const match = re.exec(label)!
@@ -64,12 +69,21 @@ export default Container.connect(
       subLabel = match[2]
     }
 
+    // Or maybe we could get a name from our contacts
+    if (!subLabel && ownProps.contacts) {
+      const contact = ownProps.contacts.find(c => c.value === label)
+      if (contact?.name) {
+        subLabel = label
+        label = contact.name
+      }
+    }
+
     return {
       firstItem: ownProps.firstItem,
       label,
-      subLabel,
       onCancelInvite,
       role: user.role,
+      subLabel,
     }
   }
 )(TeamInviteRow)
